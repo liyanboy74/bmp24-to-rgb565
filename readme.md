@@ -18,17 +18,14 @@ Bmp24ToRgb565 [FileName] [y/n:Optional SwapBytes]
 **Example:**
 
 *In Windows CMD*
-
 ```
 Bmp24ToRgb565.exe img y
 ```
-
-Or **simply double click** `Bmp24ToRgb565.exe` for run.
-it will ask for `.bmp` file Name.
+Or **simply double click** `Bmp24ToRgb565.exe` for run ,it will ask for `.bmp` file Name.
 
 **Output:**
-The output file `Name.h` have below content:
 
+The output file `Name.h` have below content:
 ```c
 #ifndef __name_h__
 #define __name_h__
