@@ -8,20 +8,28 @@
 gcc main.c -o Bmp24ToRgb565
 ```
 
+
+
 **Usage:**
 
 ```
 Bmp24ToRgb565 [FileName] [y/n:Optional SwapBytes]
 ```
 
+*for Help use*`--help` *or* `-h` 
+
+
 
 **Example:**
 
 *In Windows CMD*
+
 ```
 Bmp24ToRgb565.exe img y
 ```
-Or **simply double click** `Bmp24ToRgb565.exe` for run ,it will ask for `.bmp` file Name.
+Or simply **double click** `Bmp24ToRgb565.exe` for run ,it will ask for `.bmp` file Name.
+
+
 
 **Output:**
 

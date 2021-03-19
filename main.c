@@ -49,13 +49,16 @@ int main(int argc, char** argv)
     BITMAPSTRUCT BMP_Header;
     uint16_t BMP_WidthByteSize,BMP_Width,BMP_Hight;
 
-    printf("BMP24 to RGB565 Converter\r\n");
-
     if(argc>1)
     {
-        if(strcmp("help",argv[1])==0)
+        if(strcmp("--help",argv[1])==0 ||strcmp("-h",argv[1])==0 || strcmp("-H",argv[1])==0)
         {
-            printf("argv[1]: Enter .bmp File Name\r\nargv[2]: Optional SwapBytes (y/n)\r\n");
+            printf("BMP24 to RGB565 Converter\r\n");
+            printf("More info: https://github.com/liyanboy74\r\n");
+            printf("-------------------------------------------\r\n");
+            printf("Argv[1]:\tEnter .bmp File Name\r\n");
+            printf("Argv[2]:\tOptional SwapBytes (y/n)\r\n");
+            printf("-------------------------------------------");
             return 0;
         }
         else
@@ -69,11 +72,13 @@ int main(int argc, char** argv)
     }
     else
     {
-            printf("Enter .bmp File Name:");
-            scanf("%s",Name);
-            getchar();
-            printf("Are you want to Swap Bytes?(y/n)\r\n");
-            ask_SwapBytes=getchar();
+    	printf("BMP24 to RGB565 Converter\r\n");
+    	printf("Run by Arg --help for Help\r\n");
+        printf("Enter .bmp File Name:");
+        scanf("%s",Name);
+        getchar();
+        printf("Are you want to Swap Bytes?(y/n)\r\n");
+        ask_SwapBytes=getchar();
     }
 
     if(ask_SwapBytes=='y'||ask_SwapBytes=='Y')
@@ -108,13 +113,11 @@ int main(int argc, char** argv)
 
     Buffer=(unsigned char *)calloc(BMP_WidthByteSize,sizeof(unsigned char));
 
-    for(j=0;j<BMP_Hight;j++)
+    for(j=1;j<=BMP_Hight;j++)
 	{
-		fread(Buffer,BMP_WidthByteSize,1,in);
-		if(BMP_Width%4!=0)
-        {
-            fread(Trash,BMP_Width%4,1,in);
-        }
+
+        fseek(in, j*((-1*BMP_WidthByteSize)-(BMP_Width%4)), SEEK_END);
+        fread(Buffer,BMP_WidthByteSize,1,in);
 
 		for(i=0;i<BMP_WidthByteSize;i+=3)
 		{
@@ -129,7 +132,7 @@ int main(int argc, char** argv)
 			fprintf(out,"0x%04x",Color);
 			//fprintf(out,"0x%02x ,0x%02x ,0x%02x",Buffer[i],Buffer[i+1],Buffer[i+2]);
 
-			if(j==BMP_Hight-1)
+			if(j==BMP_Hight)
             {
                 if(i!=(BMP_WidthByteSize-3)) fprintf(out," ,");
             }
