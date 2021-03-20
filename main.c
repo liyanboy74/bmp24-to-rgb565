@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <math.h>
 
 #include "bmp.h"
 
@@ -25,9 +26,9 @@ uint16_t Convert_Color_To16(Color_S Color)
 {
     uint16_t CC=0;
 
-	CC|=((int)(Color.B*(float)0.1215686)&0x1f)<<0 ;//B5
-	CC|=((int)(Color.G*(float)0.2470588)&0x3f)<<5 ;//G6
-	CC|=((int)(Color.R*(float)0.1215686)&0x1f)<<11;//R5
+	CC|=(((int)round((Color.B*(float)0.1215686)))&0x1f)<<0 ;//B5
+	CC|=(((int)round((Color.G*(float)0.2470588)))&0x3f)<<5 ;//G6
+	CC|=(((int)round((Color.R*(float)0.1215686)))&0x1f)<<11;//R5
 
 	//CC=(((Color.R & 0xF8) << 8) | ((Color.G & 0xFC) << 3) | ((Color.B & 0xF8) >> 3));
 
@@ -42,11 +43,11 @@ uint16_t Convert_Color_To16(Color_S Color)
 int main(int argc, char** argv)
 {
     int i,j,k;
-    FILE *in,*out;
-    unsigned char *Buffer,Trash[4];
+    FILE *out;
+    unsigned char *BMP_Data,*Buffer,Trash[4];
     unsigned char Name[64],FileName[64],SaveName[64],HeaderName[64];
 
-    BITMAPSTRUCT BMP_Header;
+    BITMAPINFOHEADER BMP_Header;
     uint16_t BMP_WidthByteSize,BMP_Width,BMP_Hight;
 
     if(argc>1)
@@ -91,9 +92,9 @@ int main(int argc, char** argv)
     sprintf(SaveName,"%s.h",Name);
     sprintf(HeaderName,"__%s_h__",Name);
 
-    in=fopen(FileName,"rb");
+    BMP_Data=LoadBitmapFile(FileName,&BMP_Header);
 
-    if(in==NULL)
+    if(BMP_Data==NULL)
     {
         printf("ERROR: Can't Open %s\r\n",FileName);
         return 1;
@@ -101,10 +102,8 @@ int main(int argc, char** argv)
 
     out=fopen(SaveName,"w");
 
-    fread(&BMP_Header,0x36,1,in);
-
-    BMP_Width=BMP_Header.infoHeader.biWidth;
-    BMP_Hight=BMP_Header.infoHeader.biHeight;
+    BMP_Width=BMP_Header.biWidth;
+    BMP_Hight=BMP_Header.biHeight;
 
     printf("Size = %d X %d\r\n",BMP_Width,BMP_Hight);
     fprintf(out,"#ifndef %s\n#define %s\nconst uint16_t %s[%d*%d]={\n",HeaderName,HeaderName,Name,BMP_Width,BMP_Hight);
@@ -115,22 +114,19 @@ int main(int argc, char** argv)
 
     for(j=1;j<=BMP_Hight;j++)
 	{
-
-        fseek(in, j*((-1*BMP_WidthByteSize)-(BMP_Width%4)), SEEK_END);
-        fread(Buffer,BMP_WidthByteSize,1,in);
+        memcpy(Buffer,&BMP_Data[j*((-1*BMP_WidthByteSize)-(BMP_Width%4))+ BMP_Header.biSizeImage],BMP_WidthByteSize);
 
 		for(i=0;i<BMP_WidthByteSize;i+=3)
 		{
             uint16_t Color=0;
 			Color_S RColor;
 
-			RColor.B=Buffer[i];
+			RColor.R=Buffer[i];
 			RColor.G=Buffer[i+1];
-			RColor.R=Buffer[i+2];
+			RColor.B=Buffer[i+2];
 
 			Color=Convert_Color_To16(RColor);
 			fprintf(out,"0x%04x",Color);
-			//fprintf(out,"0x%02x ,0x%02x ,0x%02x",Buffer[i],Buffer[i+1],Buffer[i+2]);
 
 			if(j==BMP_Hight)
             {
@@ -149,9 +145,9 @@ int main(int argc, char** argv)
 
     fprintf(out,"};\n#endif\n");
     free(Buffer);
+    free(BMP_Data);
     printf("Output Saved as %s\r\n",SaveName);
     printf("End\r\n");
-    fclose(in);
     fclose(out);
     return 0;
 }

@@ -3,7 +3,7 @@
 
 #### Compile:
 ```
-gcc main.c -o Bmp24ToRgb565
+gcc main.c bmp.c -o Bmp24ToRgb565
 ```
 
 #### Usage:
