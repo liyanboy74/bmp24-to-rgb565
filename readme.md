@@ -3,7 +3,7 @@ This is a BMP 24bit to RGB 565 (16bit) Converter for Embedding.
 
 ## Compile
 ```
-gcc main.c bmp.c -o Bmp24ToRgb565
+$ gcc main.c bmp/bmp.c -Ibmp -o Bmp24ToRgb565
 ```
 
 ## Usage

@@ -1,0 +1,3 @@
+[submodule "bmp"]
+	path = bmp
+	url = https://github.com/liyanboy74/bmp.git
