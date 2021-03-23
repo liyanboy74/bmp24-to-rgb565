@@ -1,19 +1,19 @@
 # BMP to RGB565     
 This is a BMP 24bit to RGB 565 (16bit) Converter for Embedding.
 
-## Compile:
+## Compile
 ```
 gcc main.c bmp.c -o Bmp24ToRgb565
 ```
 
-## Usage:
+## Usage
 ```
 Bmp24ToRgb565 [FileName] [y/n:Optional SwapBytes]
 ```
 For help use`--help` or `-h` 
 
 
-## Example:
+## Example
 In Windows CMD:
 ```
 Bmp24ToRgb565.exe img
@@ -21,7 +21,7 @@ Bmp24ToRgb565.exe img
 Or simply **double click** `Bmp24ToRgb565.exe` for run ,it will ask for `.bmp` file Name.
 
 
-## Output:
+## Output
 The output file `Name.h` have below content:
 ```c
 #ifndef __name_h__
@@ -31,7 +31,7 @@ const uint16_t name[X*Y]={.....................};
 ```
 Include `Name.h` in your project and use it.
 
-## Note:
+## Note
 Windows bash script `.bat` for multiple convert:
  ```
  for /l %%x in (1, 1, 100) do (
