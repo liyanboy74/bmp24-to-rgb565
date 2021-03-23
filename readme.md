@@ -1,9 +1,12 @@
 # BMP to RGB565     
 This is a BMP 24bit to RGB 565 (16bit) Converter for Embedding.
 
-## Compile
+## Clone & Compile
+
 ```
-$ gcc main.c bmp/bmp.c -Ibmp -o Bmp24ToRgb565
+git clone --recursive https://github.com/liyanboy74/bmp24-to-rgb565.git
+cd bmp24-to-rgb565
+gcc main.c bmp/bmp.c -Ibmp -o Bmp24ToRgb565
 ```
 
 ## Usage
