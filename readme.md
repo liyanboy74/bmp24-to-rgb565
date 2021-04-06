@@ -7,8 +7,8 @@ This is a BMP 24bit to RGB 565 (16bit) Converter for Embedding.
 git clone --recursive https://github.com/liyanboy74/bmp24-to-rgb565.git
 cd bmp24-to-rgb565
 mkdir build && cd build
-cmake -G Ninja ..
-Ninja
+cmake ..
+make
 ```
 
 ## Usage

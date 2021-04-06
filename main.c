@@ -10,27 +10,20 @@
 #include <math.h>
 
 #include "bmp.h"
+#include "color.h"
 
 char ask_SwapBytes='N';
-
-typedef struct{
-    uint8_t B,G,R;
-}Color_S;
 
 static void SwapBytes(uint16_t *color) {
     uint8_t temp = *color >> 8;
     *color = (*color << 8) | temp;
 }
 
-uint16_t Convert_Color_To16(Color_S Color)
+uint16_t Convert_Color_To16(color_rgb_s Color)
 {
     uint16_t CC=0;
 
-	CC|=(((int)round((Color.B*(float)0.1215686)))&0x1f)<<0 ;//B5
-	CC|=(((int)round((Color.G*(float)0.2470588)))&0x3f)<<5 ;//G6
-	CC|=(((int)round((Color.R*(float)0.1215686)))&0x1f)<<11;//R5
-
-	//CC=(((Color.R & 0xF8) << 8) | ((Color.G & 0xFC) << 3) | ((Color.B & 0xF8) >> 3));
+	CC=color_24_to_16_s(Color);
 
 	if(ask_SwapBytes=='y' || ask_SwapBytes=='Y')
     {
@@ -45,7 +38,7 @@ int main(int argc, char** argv)
     int i,j,k;
     FILE *out;
     unsigned char *BMP_Data,*Buffer,Trash[4];
-    unsigned char Name[64],FileName[64],SaveName[64],HeaderName[64];
+    unsigned char Name[32],FileName[42],SaveName[42],HeaderName[42];
 
     BITMAPINFOHEADER BMP_Header;
     uint16_t BMP_WidthByteSize,BMP_Width,BMP_Hight;
@@ -119,13 +112,13 @@ int main(int argc, char** argv)
 		for(i=0;i<BMP_WidthByteSize;i+=3)
 		{
             uint16_t Color=0;
-			Color_S RColor;
+			color_rgb_s RGBColor;
 
-			RColor.R=Buffer[i];
-			RColor.G=Buffer[i+1];
-			RColor.B=Buffer[i+2];
+			RGBColor.r=Buffer[i];
+			RGBColor.g=Buffer[i+1];
+			RGBColor.b=Buffer[i+2];
 
-			Color=Convert_Color_To16(RColor);
+			Color=Convert_Color_To16(RGBColor);
 			fprintf(out,"0x%04x",Color);
 
 			if(j==BMP_Hight)
